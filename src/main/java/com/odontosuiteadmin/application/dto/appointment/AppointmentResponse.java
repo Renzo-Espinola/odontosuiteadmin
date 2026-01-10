@@ -10,5 +10,8 @@ public record AppointmentResponse(
         LocalDateTime endTime,
         AppointmentStatus status,
         String reason,
-        String notes) {
+        String notes,
+        boolean createdLate,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 }
