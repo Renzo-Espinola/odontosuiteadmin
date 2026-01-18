@@ -18,4 +18,11 @@ public class ApiExceptionHandler {
     public Map<String, Object> badRequest(IllegalStateException ex) {
         return Map.of("error", "BAD_REQUEST", "message", ex.getMessage());
     }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> badRequest(IllegalArgumentException ex) {
+        return Map.of("message", ex.getMessage());
+    }
 }
