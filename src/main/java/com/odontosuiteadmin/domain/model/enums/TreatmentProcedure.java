@@ -1,12 +1,13 @@
 package com.odontosuiteadmin.domain.model.enums;
 
 public enum TreatmentProcedure {
+    CLEANING,
     FILLING,
     ROOT_CANAL,
     EXTRACTION,
+    ORTHODONTICS,
     IMPLANT,
     CROWN,
-    CLEANING,
     WHITENING,
     CONTROL_VISIT,
     OTHER
