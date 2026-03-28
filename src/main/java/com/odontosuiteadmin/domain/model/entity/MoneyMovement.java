@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Filter;
 
 @Entity
 @Table(name = "money_movements",
@@ -15,10 +17,11 @@ import lombok.*;
         })
 @Getter
 @Setter
+@Filter(name = "clinicFilter", condition = "clinic_id = :clinicId")
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MoneyMovement {
+public class MoneyMovement extends TenantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

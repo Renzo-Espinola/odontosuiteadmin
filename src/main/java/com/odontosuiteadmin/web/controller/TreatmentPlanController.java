@@ -4,9 +4,12 @@ import com.odontosuiteadmin.application.dto.plantreatment.CreateTreatmentPlanIte
 import com.odontosuiteadmin.application.dto.plantreatment.TreatmentPlanItemResponse;
 import com.odontosuiteadmin.application.dto.plantreatment.UpdateTreatmentPlanItemRequest;
 import com.odontosuiteadmin.application.dto.plantreatment.UpdateTreatmentPlanStatusRequest;
+import com.odontosuiteadmin.application.dto.security.MeDto;
 import com.odontosuiteadmin.application.service.plantreatment.TreatmentPlanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +41,15 @@ public class TreatmentPlanController {
     @PutMapping("/{id}")
     public TreatmentPlanItemResponse update(@PathVariable Long id, @Valid @RequestBody UpdateTreatmentPlanItemRequest r) {
         return service.update(id, r);
+    }
+
+    @GetMapping("/me")
+    public MeDto me(@AuthenticationPrincipal Jwt jwt) {
+        long userId = Long.parseLong(jwt.getSubject());
+        long clinicId = jwt.getClaim("activeClinicId");
+        String role = jwt.getClaim("activeRole");
+
+        return new MeDto(userId, clinicId, role);
     }
 
 }

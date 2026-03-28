@@ -1,12 +1,15 @@
 package com.odontosuiteadmin.domain.model.entity;
 
+import com.odontosuiteadmin.config.ClinicEntityListener;
 import com.odontosuiteadmin.domain.model.enums.ToothSurface;
 import com.odontosuiteadmin.domain.model.enums.TreatmentProcedure;
 import com.odontosuiteadmin.domain.model.enums.TreatmentStatus;
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,10 +25,11 @@ import java.time.LocalDateTime;
 )
 @Getter
 @Setter
+@Filter(name = "clinicFilter", condition = "clinic_id = :clinicId")
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class TreatmentPlanItem {
+public class TreatmentPlanItem extends TenantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -124,6 +124,13 @@ public class TreatmentPlanServiceImpl implements TreatmentPlanService {
                 );
             }
         }
+
+        String tooth = trimToNull(r.toothCode());
+
+        if (tooth == null && r.surface() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "surface no puede enviarse si toothCode es null (procedimiento global)");
+        }
     }
 
     private TreatmentPlanItemResponse toResponse(TreatmentPlanItem t) {
