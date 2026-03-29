@@ -1,22 +1,31 @@
 package com.odontosuiteadmin.domain.model.entity;
 
+import com.odontosuiteadmin.config.ClinicEntityListener;
 import com.odontosuiteadmin.domain.model.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.*;
 
 @Entity
 @Table(name = "appointments",
         indexes = {
                 @Index(name = "idx_appointments_patient", columnList = "patient_id"),
-                @Index(name = "idx_appointments_start_time", columnList = "start_time")
+                @Index(name = "idx_appointments_start_time", columnList = "start_time"),
+                @Index(name = "idx_appointments_created_at", columnList = "created_at")
         })
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Appointment {
+@Filter(name = "clinicFilter", condition = "clinic_id = :clinicId")
+public class Appointment extends TenantEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,4 +46,17 @@ public class Appointment {
 
     private String reason;
     private String notes;
+
+    @Column(name = "created_late", nullable = false)
+    @Builder.Default
+    private boolean createdLate = false;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
 }

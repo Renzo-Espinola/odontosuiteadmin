@@ -1,5 +1,6 @@
 package com.odontosuiteadmin.domain.model.entity;
 
+import com.odontosuiteadmin.config.ClinicEntityListener;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -7,16 +8,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 @Entity
 @Table(name = "cash_closures",
         uniqueConstraints = @UniqueConstraint(name = "uk_cash_closure_date", columnNames = "closure_date"))
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CashClosure {
+@Filter(name = "clinicFilter", condition = "clinic_id = :clinicId")
+public class CashClosure extends TenantEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,6 +3,7 @@ package com.odontosuiteadmin.application.service.money;
 import com.odontosuiteadmin.application.dto.cash.CreateMoneyMovementRequest;
 import com.odontosuiteadmin.application.dto.cash.MoneyMovementResponse;
 import com.odontosuiteadmin.domain.model.entity.MoneyMovement;
+import com.odontosuiteadmin.domain.model.enums.MovementConcept;
 import com.odontosuiteadmin.domain.model.enums.MovementNature;
 import com.odontosuiteadmin.domain.repository.CashClosureRepository;
 import com.odontosuiteadmin.domain.repository.MoneyMovementRepository;
@@ -60,18 +61,24 @@ public class MoneyMovementServiceImpl implements MoneyMovementService {
 
     private void validateRequest(CreateMoneyMovementRequest r) {
         if (r == null)
-            throw new IllegalArgumentException("Request inválido");
+            throw new IllegalArgumentException("request es requerido");
         if (r.concept() == null)
             throw new IllegalArgumentException("concept es requerido");
         if (r.paymentMethod() == null)
             throw new IllegalArgumentException("paymentMethod es requerido");
         if (r.amount() == null)
             throw new IllegalArgumentException("amount es requerido");
-        if (r.amount().signum() <= 0)
-            throw new IllegalArgumentException("amount debe ser > 0");
 
-        if (r.concept().nature() == MovementNature.INCOME && r.patientId() == null) {
-            throw new IllegalArgumentException("patientId es requerido para ingresos");
+        MovementNature nature = r.concept().nature();
+
+        if (nature == MovementNature.INCOME
+                && r.concept() != MovementConcept.OTHER_INCOME
+                && r.patientId() == null) {
+            throw new IllegalArgumentException("patientId es requerido para ingresos (excepto OTHER_INCOME)");
+        }
+
+        if (r.appointmentId() != null && r.patientId() == null) {
+            throw new IllegalArgumentException("patientId es requerido cuando appointmentId está presente");
         }
     }
 
